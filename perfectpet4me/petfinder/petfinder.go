@@ -46,44 +46,31 @@ type TokenFetcher struct {
 	}
 }
 
-type PetType struct {
-	Animal  map[string]string
-	Options struct {
-		Option [](map[string]string) `json:"option"`
+type Pet struct {
+	Age         string
+	Animal      string
+    Breed       []string
+    Contact     struct {
+		Address1    string
+		Address2    string
+		City        string
+		Email       string
+		Fax         string
+		State       string
+		Zip         string
 	}
-	ShelterPetId map[string]string
-	Name         map[string]string
-	Contact      struct {
-		Email    map[string]string
-		Zip      map[string]string
-		City     map[string]string
-		Fax      map[string]string
-		Address1 map[string]string
-		Phone    map[string]string
-		State    map[string]string
-		Address2 map[string]string
-	}
-	Description map[string]string
-	Sex         map[string]string
-	Age         map[string]string
-	ShelterId   map[string]string
-	LastUpdate  map[string]string
-	Media       struct {
-		Photos struct {
-			Photo [](map[string]string) `json:"photo"`
-		}
-	}
-	Size map[string]string
-	Id   map[string]string
+	Description string
+	Id          string
+	LastUpdate  string
+	Name        string
+	Options     []string
+	Photos      [](map[string]string)
+	Sex         string
+	ShelterId   string
+	ShelterPetId string
+	Size        string
 }
 
-type PetFetcher struct {
-	Petfinder struct {
-		Pets struct {
-			Pet PetType
-		}
-	}
-}
 
 /**********************************************************
                        Methods
@@ -150,55 +137,27 @@ func (pf *PetFinder) GetPet(animal string, location string) *petp.Pet {
 
 	j, _ := simplejson.NewJson(body)
 	p := new(petp.Pet)
-	jo := j.Get("petfinder").Get("pets").Get("pet")
-	p.Id, _ = jo.Get("id").Get("$t").String()
-	p.Name, _ = jo.Get("name").Get("$t").String()
-	p.Age, _ = jo.Get("age").Get("$t").String()
-	p.AnimalType, _ = jo.Get("animal").Get("$t").String()
-	p.Breed, _ = jo.Get("breeds").Get("breed").Get("$t").String()
-	p.Sex, _ = jo.Get("sex").Get("$t").String()
-	p.Description, _ = jo.Get("description").Get("$t").String()
-	x, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(0).Get("$t").String()
-	t, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(4).Get("$t").String()
+	pjson := j.Get("petfinder").Get("pets").Get("pet")
+	p.Id, _ = pjson.Get("id").Get("$t").String()
+	p.Name, _ = pjson.Get("name").Get("$t").String()
+	p.Age, _ = pjson.Get("age").Get("$t").String()
+	p.AnimalType, _ = pjson.Get("animal").Get("$t").String()
+	p.Breed, _ = pjson.Get("breeds").Get("breed").Get("$t").String()
+	p.Sex, _ = pjson.Get("sex").Get("$t").String()
+	p.Description, _ = pjson.Get("description").Get("$t").String()
+	x, _ := pjson.Get("media").Get("photos").Get("photo").GetIndex(0).Get("$t").String()
+	t, _ := pjson.Get("media").Get("photos").Get("photo").GetIndex(4).Get("$t").String()
 	p.PictureURLs[0] = map[string]string{
 		"x": x,
 		"t": t,
 	}
-	//temp, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(0).Get("$t").String()
-	//fmt.Fprintf(pf.w, "%v\n", temp)
 
 	return p
-	/*
-		    fmt.Fprintf(pf.w, "%v\n", p.Breed)
-
-		    pfetch := new(PetFetcher)
-		    err := json.Unmarshal(body, &pfetch)
-		    if err != nil {
-		        fmt.Fprintf(pf.w, "%v\n", err.Error())
-		    }
-
-		    return &pfetch.Petfinder.Pets.Pet
-		/*
-		    p = NewPet(
-		        pfetch.Petfinder.Pets.Pet.Name["$t"],
-		        pfetch.Petfinder.Pets.Pet.Age["$t"],
-		        pfetch.Petfinder.Pets.Pet.Sex["$t"],
-		"border collie",//        pfetch.Petfinder.Pets.Pet.Breed,
-		        pfetch.Petfinder.Pets.Pet.Size["$t"],
-		        pfetch.Petfinder.Pets.Pet.ShelterId["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.City["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.Phone["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.Email["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.Address1["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.Address2["$t"],
-		        pfetch.Petfinder.Pets.Pet.Contact.State["$t"],
-		        pfetch.Petfinder.Pets.Pet.Media.Photos.Photo
-		        )
-	*/
 }
 
-func (pf *PetFinder) GetPets(animal string, location string, numResults int) []*petp.Pet {
-	errstr := ""
+func (pf *PetFinder) GetPets(animal string, location string, numResults int) (pets []*Pet) {
+    c := appengine.NewContext(pf.r)
+
 	method := "pet.find"
 	args := map[string]string{
 		"key":      API_KEY,
@@ -215,29 +174,211 @@ func (pf *PetFinder) GetPets(animal string, location string, numResults int) []*
 	}
 
 	j, _ := simplejson.NewJson(body)
-	var pets []*petp.Pet
-	for i := 0; i < numResults; i++ {
-		p := new(petp.Pet)
-		jo := j.Get("petfinder").Get("pets").Get("pet").GetIndex(i)
-		p.Id, _ = jo.Get("id").Get("$t").String()
-		p.Name, _ = jo.Get("name").Get("$t").String()
-		p.Age, _ = jo.Get("age").Get("$t").String()
-		p.AnimalType, _ = jo.Get("animal").Get("$t").String()
-		p.Breed, _ = jo.Get("breeds").Get("breed").Get("$t").String()
-		p.Sex, _ = jo.Get("sex").Get("$t").String()
-		x, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(0).Get("$t").String()
-		t, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(4).Get("$t").String()
-		p.PictureURLs[0] = map[string]string{
-			"x": x,
-			"t": t,
-		}
-		pets = append(pets, p)
-	}
-	fmt.Fprintf(pf.w, "%v\n", pets)
-	//temp, _ := jo.Get("media").Get("photos").Get("photo").GetIndex(0).Get("$t").String()
-	//fmt.Fprintf(pf.w, "%v\n", temp)
+    var err error
 
-	return pets
+	for i := 0; i < numResults; i++ {
+		p := new(Pet)
+		pjson := j.Get("petfinder").Get("pets").Get("pet").GetIndex(i)
+
+        // age
+        if age, ok := pjson.CheckGet("age"); ok {
+            if p.Age, err = age.Get("$t").String(); err != nil {
+                c.Errorf("age: %v\n", err)
+            }
+        }
+        // animal
+        if animal, ok := pjson.CheckGet("animal"); ok {
+            if p.Animal, err = animal.Get("$t").String(); err != nil {
+                c.Errorf("animal: %v\n", err)
+            }
+        }
+        // breeds
+        if breeds, ok := pjson.CheckGet("breeds"); ok {
+            if breed, ok := breeds.CheckGet("breed"); ok {
+                barray, _ := breed.Array()
+                if barray == nil {
+                    if breedstr, ok := breed.CheckGet("$t"); ok {
+                        if temp, err := breedstr.String(); err != nil {
+                            c.Errorf("one breed: %v\n", err)
+                        } else {
+                            p.Breed = append(p.Breed, temp)
+                        }
+                    }
+                } else {
+                    for i := range barray {
+                        if temp, err := breed.GetIndex(i).Get("$t").String(); err != nil {
+                            c.Errorf("multiple breeds: %v\n", err)
+                        } else {
+                            p.Breed = append(p.Breed, temp)
+                        }
+                    }
+                }
+            } else {
+                c.Errorf("breed: %v\n", err)
+            }
+        }
+        // contact
+        if contact, ok := pjson.CheckGet("contact"); ok {
+            // address1
+            if address1, ok := contact.CheckGet("address1"); ok {
+                if p.Contact.Address1, err = address1.Get("$t").String(); err != nil {
+                    c.Errorf("address1: %v\n", err)
+                }
+            }
+            // address2
+            if address2, ok := contact.CheckGet("address2"); ok {
+                if p.Contact.Address2, err = address2.Get("$t").String(); err != nil {
+                    c.Errorf("address2: %v\n", err)
+                }
+            }
+            // city
+            if city, ok := contact.CheckGet("city"); ok {
+                if p.Contact.City, err = city.Get("$t").String(); err != nil {
+                    c.Errorf("city: %v\n", err)
+                }
+            }
+            // email
+            if email, ok := contact.CheckGet("email"); ok {
+                if p.Contact.Email, err = email.Get("$t").String(); err != nil {
+                    c.Errorf("email: %v\n", err)
+                }
+            }
+            // fax
+            if fax, ok := contact.CheckGet("fax"); ok {
+                if p.Contact.Fax, err = fax.Get("$t").String(); err != nil {
+                    c.Errorf("fax: %v\n", err)
+                }
+            }
+            // state
+            if state, ok := contact.CheckGet("state"); ok {
+                if p.Contact.State, err = state.Get("$t").String(); err != nil {
+                    c.Errorf("state: %v\n", err)
+                }
+            }
+            // zip
+            if zip, ok := contact.CheckGet("zip"); ok {
+                if p.Contact.Zip, err = zip.Get("$t").String(); err != nil {
+                    temp, err := zip.Get("$t").Float64()
+                    p.Contact.Zip = strconv.Itoa(int(temp))
+                    if err != nil {
+                        c.Errorf("zip: %v\n", err)
+                    }
+                }
+            }
+        }
+        // description
+        if description, ok := pjson.CheckGet("description"); ok {
+            if p.Description, err = description.Get("$t").String(); err != nil {
+                c.Errorf("description: %v\n", err)
+            }
+        }
+        // id
+        if id, ok := pjson.CheckGet("id"); ok {
+            if p.Id, err = id.Get("$t").String(); err != nil {
+                temp, err := id.Get("$t").Float64()
+                p.Id = strconv.Itoa(int(temp))
+                if err != nil {
+                    c.Errorf("id: %v\n", err)
+                }
+            }
+        }
+        // lastupdate
+        if lastupdate, ok := pjson.CheckGet("lastupdate"); ok {
+            if p.LastUpdate, err = lastupdate.Get("$t").String(); err != nil {
+                c.Errorf("lastupdate: %v\n", err)
+            }
+        }
+        // name
+        if name, ok := pjson.CheckGet("name"); ok {
+            if p.Name, err = name.Get("$t").String(); err != nil {
+                c.Errorf("name: %v\n", err)
+            }
+        }
+        // options
+        if options, ok := pjson.CheckGet("options"); ok {
+            if option, ok := options.CheckGet("option"); ok {
+                oarray, _ := option.Array()
+                if oarray == nil {
+                    if optionstr, ok := option.CheckGet("$t"); ok {
+                        if temp, err := optionstr.String(); err != nil {
+                            c.Errorf("one option: %v\n", err)
+                        } else {
+                            p.Options = append(p.Options, temp)
+                        }
+                    }
+                } else {
+                    for i := range oarray {
+                        if temp, err := option.GetIndex(i).Get("$t").String(); err != nil {
+                            c.Errorf("multiple options: %v\n", err)
+                        } else {
+                            p.Options = append(p.Options, temp)
+                        }
+                    }
+                }
+            } else {
+                c.Errorf("option: %v\n", err)
+            }
+        }
+        // photos
+        if photos, ok := pjson.Get("media").CheckGet("photos"); ok {
+            if photo, ok := photos.CheckGet("photo"); ok {
+                parray, _ := photo.Array()
+                if parray == nil {
+                    c.Errorf("empty photo array!!!: %v\n", err)
+                } else {
+                    for i := range parray {
+                        var size, url string
+                        var id int
+                        if id, err = photo.GetIndex(i).Get("@id").Int(); err != nil {
+                            c.Errorf("photo id: %v\n", err)
+                        }
+                        if size, err = photo.GetIndex(i).Get("@size").String(); err != nil {
+                            c.Errorf("photo size: %v\n", err)
+                        }
+                        if url, err = photo.GetIndex(i).Get("$t").String(); err != nil {
+                            c.Errorf("photo url: %v\n", err)
+                        }
+                        if err == nil {
+                            p.Photos = append(p.Photos, map[string]string{
+                                "id": strconv.Itoa(id),
+                                "size": size,
+                                "url": url,
+                                } )
+                        }
+                    }
+                }
+            } else {
+                c.Errorf("photo: %v\n", err)
+            }
+        }
+        // sex
+        if sex, ok := pjson.CheckGet("sex"); ok {
+            if p.Sex, err = sex.Get("$t").String(); err != nil {
+                c.Errorf("sex: %v\n", err)
+            }
+        }
+        // shelterid
+        if shelterid, ok := pjson.CheckGet("shelterid"); ok {
+            if p.ShelterId, err = shelterid.Get("$t").String(); err != nil {
+                c.Errorf("shelterid: %v\n", err)
+            }
+        }
+        // shelterpetid
+        if shelterpetid, ok := pjson.CheckGet("shelterpetid"); ok {
+            if p.ShelterPetId, err = shelterpetid.Get("$t").String(); err != nil {
+                c.Errorf("shelterpid: %v\n", err)
+            }
+        }
+        // size
+        if size, ok := pjson.CheckGet("size"); ok {
+            if p.Size, err = size.Get("$t").String(); err != nil {
+                c.Errorf("size: %v\n", err)
+            }
+        }
+
+        pets = append(pets, p)
+	}
+	return
 }
 
 func (pf *PetFinder) RequestBuilder(apicall string, args map[string]string) string {

@@ -14,7 +14,7 @@
 <div class="row">
 {{range $p := .}}
 <div class="col col-lg-3">
-<--include image-->
+<img src='{{if $p.Photos}}{{index $p.Photos 0 "url"}}{{end}}' />
 Name:<input type="text" name="petname" placeholder="petname" value='{{$p.Name}}'><br>
 Gender:<input type="text" name="petgender" placeholder="petgender" value='{{$p.Sex}}'><br>
 Size:<input type="text" name="petsize" placeholder="petsize" value='{{$p.Size}}'><br>

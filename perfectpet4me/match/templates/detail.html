@@ -1,30 +1,18 @@
 {{define "content"}}
-<div class="row">
-
-    <div class="col col-lg-3">
-<center>Filters</center><br>
-<!--Display filters selected-->
-<br>
     
-<br>
-</div>
-    
-
-<div class="col col-lg-9">MAIN CONTENT CONTAINER
-<div class="row">
+<div class="row center">
 {{range $p := .}}
-<div class="col col-lg-3">
-<img src='{{if $p.Photos}}{{index $p.Photos 0 "url"}}{{end}}' />
-Name:<input type="text" name="petname" placeholder="petname" value='{{$p.Name}}'><br>
-Gender:<input type="text" name="petgender" placeholder="petgender" value='{{$p.Sex}}'><br>
-Size:<input type="text" name="petsize" placeholder="petsize" value='{{$p.Size}}'><br>
-Age:<input type="text" name="petage" placeholder="petage" value='{{$p.Age}}'><br>
-<input type="submit" value="View More">
-</div>
+  <div class="col col-lg-3">
+    <img src='{{if $p.Photos}}{{index $p.Photos 0 "url"}}{{end}}' />
+    Name:<input type="text" name="petname" placeholder="petname" value='{{$p.Name}}'><br>
+    Gender:<input type="text" name="petgender" placeholder="petgender" value='{{$p.Sex}}'><br>
+    Size:<input type="text" name="petsize" placeholder="petsize" value='{{$p.Size}}'><br>
+    Age:<input type="text" name="petage" placeholder="petage" value='{{$p.Age}}'><br>
+    <input type="submit" value="View More">
+  </div>
 {{end}}
 <br>
 </div>
-</div>
     
-  </div><!-- /.row -->
+</div><!-- /.row -->
 {{end}}

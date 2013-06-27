@@ -38,6 +38,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	http.Redirect(w, r, "/user", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/index.html", http.StatusMovedPermanently)
 	return
 }

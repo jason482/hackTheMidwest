@@ -27,10 +27,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if &u != nil && u.Zip != "" {
-		http.Redirect(w, r, "/search", http.StatusMovedPermanently)
-	}
-
 	if err := userTmpls.Execute(w, u); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

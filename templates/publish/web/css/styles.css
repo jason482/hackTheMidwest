@@ -1,0 +1,29 @@
+@font-face { font-family: 'SouciSansRegular'; src: url('../fonts/SOUCISAN-webfont.eot'); src: url('../fonts/SOUCISAN-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/SOUCISAN-webfont.woff') format('woff'), url('../fonts/SOUCISAN-webfont.ttf') format('truetype'), url('../fonts/SOUCISAN-webfont.svg#SouciSansRegular') format('svg'); font-weight: normal; font-style: normal; }
+
+.navbar-brand { font-family: 'SouciSansRegular', cursive; font-size: 35px; letter-spacing: 0.1em; line-height: 1.2em; }
+
+.navbar-inverse .navbar-brand { color: #f7f7f7; }
+
+.navbar-inverse { background-color: #e74c3c; }
+	.navbar-inverse .navbar-toggle { border-color: #c0392b; }
+		.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus { background-color: #c0392b; }
+	.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus { color: #fff; background-color: #c0392b; }
+	.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus { background-color: #c0392b; }
+	.navbar-inverse .navbar-nav > li > a { color: #e0e0e0; }
+
+/* Animals */
+#puppy { background-image: url('../img/brown-puppy.png'); background-repeat: no-repeat; width: 105px; height: 118px; float: left; position: absolute; margin-left: 0; margin-top: 12%; z-index: 4; visibility: hidden; }
+#bunny { background-image: url('../img/bunny.png'); background-repeat: no-repeat; width: 85px; height: 133px; float: left; position: absolute; margin-left: 0; margin-top: 10%; z-index: 2; visibility: hidden; }
+#girlPuppy { background-image: url('../img/girl-puppy.png'); background-repeat: no-repeat; width: 118px; height: 110px; float: left; position: absolute; margin-right: 0; margin-top: 9%; z-index: 3; visibility: hidden; }
+#lizard { background-image: url('../img/lizard.png'); background-repeat: no-repeat; width: 127px; height: 94px; float: left; position: absolute; margin-left: 0; margin-top: 10%; z-index: 1; visibility: hidden; }
+#furry { background-image: url('../img/misc-furry.png'); background-repeat: no-repeat; width: 69px; height: 64px; float: left; position: absolute; margin-left: 0; margin-top: 12%; z-index: 5; visibility: hidden; }
+#pig { background-image: url('../img/pig.png'); background-repeat: no-repeat; width: 118px; height: 97px; float: left; position: absolute; margin-left: 0; margin-top: 11%; z-index: 6; visibility: hidden; }
+#stripedKitty { background-image: url('../img/striped-kitty.png'); background-repeat: no-repeat; width: 133px; height: 151px; float: left; position: absolute; margin-left: 0; margin-top: 10%; z-index: 7; visibility: hidden; }
+#whiteKitty { background-image: url('../img/white-kitty.png'); background-repeat: no-repeat; width: 139px; height: 111px; float: left; position: absolute; margin-left: 0; margin-top: 12%; z-index: 8; visibility: hidden; }
+
+.animal-box { min-height: 150px; position: relative; }
+
+.grass { height: 100px; width: 100%; z-index: -1; padding: 0; margin: 0 0 50px 0; background-color: #2ecc71;background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#2ecc71), to(#27ae60));background-image: -webkit-linear-gradient(#2ecc71, #27ae60);background-image: -moz-linear-gradient(#2ecc71, #27ae60);background-image: -o-linear-gradient(#2ecc71, #27ae60);background-image: linear-gradient(#2ecc71, #27ae60);	background-repeat: repeat-x; }
+
+.size140 { width: 140px; height: 140px; }
+.accent { border: 4px solid #428BCA; padding: 1px; }
